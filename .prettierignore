@@ -1,0 +1,7 @@
+dist
+coverage
+pnpm-lock.yaml
+.claude
+.mcp.json
+.idea
+.vscode
