@@ -50,16 +50,19 @@ export function visibility(member: ClassMember): Visibility {
   return ('accessibility' in member ? member.accessibility : undefined) ?? 'public';
 }
 
-/** Whether a class member is a field initialised with `inject(...)`. */
+/**
+ * Whether a class member is a field whose initializer calls `inject()` while the class is constructed:
+ * `inject(X)`, but also `inject(X).prop`, `inject(X).select(...)` or `toSignal(inject(X).changes)`. Calls
+ * inside callbacks run later and do not count, matching angular-eslint's `inject-at-top`.
+ */
 export function isInjectedField(member: ClassMember): boolean {
-  return member.type === 'PropertyDefinition' && initializerCall(member) === 'inject';
+  return member.type === 'PropertyDefinition' && !member.static && callsInjectEagerly(member.value);
 }
 
 /** Position of a member in the class order, as `[group, rank within group]`. */
 export function memberRank(member: ClassMember): [number, number] {
   const group = memberGroup(member);
   const index = GROUPS.indexOf(group);
-
   if (group === 'injected') return [index, visibilityRank(member)];
   // Methods read the other way round: the public API first, helpers last.
   if (group === 'method') return [index, -VISIBILITY_RANK[visibility(member)]];
@@ -97,15 +100,38 @@ function fieldGroup(member: TSESTree.PropertyDefinition): MemberGroup {
   const decorators = member.decorators.map(decoratorName);
   if (decorators.some((name) => name !== undefined && IO_DECORATORS.has(name))) return 'input/output';
   if (decorators.some((name) => name !== undefined && QUERY_DECORATORS.has(name))) return 'query';
+  if (isInjectedField(member)) return 'injected';
 
   const call = initializerCall(member);
-  if (call === 'inject') return 'injected';
   if (call === null) return 'field';
   if (IO_CALLS.has(call)) return 'input/output';
   if (QUERY_CALLS.has(call)) return 'query';
   if (call === 'signal') return 'signal';
 
   return DERIVED_CALLS.has(call) ? 'derived' : 'field';
+}
+
+function callsInjectEagerly(node: TSESTree.Node | null): boolean {
+  if (!node) return false;
+  if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && node.callee.name === 'inject') return true;
+  if (node.type === 'ClassExpression' || (isFunction(node) && !isInvokedImmediately(node))) return false;
+
+  return childNodes(node).some(callsInjectEagerly);
+}
+
+function isFunction(node: TSESTree.Node): boolean {
+  return node.type === 'ArrowFunctionExpression' || node.type === 'FunctionExpression';
+}
+
+function isInvokedImmediately(node: TSESTree.Node): boolean {
+  return node.parent?.type === 'CallExpression' && node.parent.callee === node;
+}
+
+function childNodes(node: TSESTree.Node): TSESTree.Node[] {
+  return Object.entries(node)
+    .filter(([key]) => key !== 'parent')
+    .flatMap(([, value]: [string, unknown]) => (Array.isArray(value) ? value : [value]))
+    .filter((value): value is TSESTree.Node => typeof value === 'object' && value !== null && 'type' in value);
 }
 
 function isMethod(member: ClassMember): boolean {

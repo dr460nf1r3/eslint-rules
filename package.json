@@ -1,6 +1,6 @@
 {
   "name": "@dr460nf1r3/eslint-rules",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "Opinionated ESLint rules for TypeScript, Angular and NestJS code, with lite, recommended and full presets",
   "keywords": [
     "eslint",
@@ -53,25 +53,37 @@
     "check-generated": "tsx tools/generate-configs.ts --check && tsx tools/generate-rule-docs.ts --check && tsx tools/generate-rule-lists.ts --check",
     "prepublishOnly": "pnpm build"
   },
-  "dependencies": {
-    "@typescript-eslint/parser": "^8.71.1",
-    "@typescript-eslint/utils": "^8.71.1"
-  },
   "peerDependencies": {
+    "@angular-eslint/eslint-plugin": "^22.0.0",
+    "@angular-eslint/eslint-plugin-template": "^22.0.0",
     "@angular-eslint/template-parser": "^20.0.0 || ^21.0.0 || ^22.0.0",
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@typescript-eslint/utils": "^8.0.0",
     "eslint": "^9.0.0 || ^10.0.0",
     "typescript": "*",
     "typescript-eslint": "^8.0.0"
   },
   "peerDependenciesMeta": {
+    "@angular-eslint/eslint-plugin": {
+      "optional": true
+    },
+    "@angular-eslint/eslint-plugin-template": {
+      "optional": true
+    },
     "@angular-eslint/template-parser": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^22.5.0",
+    "@angular-eslint/eslint-plugin-template": "^22.5.0",
     "@angular-eslint/template-parser": "^22.5.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.6.4",
+    "@typescript-eslint/parser": "^8.71.1",
     "@typescript-eslint/rule-tester": "^8.71.1",
+    "@typescript-eslint/utils": "^8.71.1",
     "eslint": "^10.12.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.9",

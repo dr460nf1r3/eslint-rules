@@ -45,7 +45,6 @@ function ruleDoc(
 ): string {
   const rule = rules[entry.name as keyof typeof rules];
   const rationale = ruleModule.RULE_DOCS_EXTENSION?.rationale;
-
   return `<!--
   DO NOT EDIT. Generated from src/rules/${entry.name}.ts and tests/rules/${entry.name}/cases.ts.
   Run \`pnpm update-rule-docs\` to update it.
@@ -105,7 +104,6 @@ function example(testCase: Case): string {
     normalized.filename ? `File: \`${normalized.filename}\`` : undefined,
     normalized.options?.length ? `Options: \`${JSON.stringify(normalized.options)}\`` : undefined,
   ].filter(Boolean);
-
   return `#### ${capitalize(title)}
 
 ${details.length > 0 ? `${details.join(' · ')}\n\n` : ''}\`\`\`${language}
@@ -120,6 +118,5 @@ function capitalize(text: string): string {
 function dedent(code: string): string {
   const lines = code.replace(/^\n+|\s+$/g, '').split('\n');
   const indent = Math.min(...lines.filter((line) => line.trim()).map((line) => line.match(/^ */)![0].length));
-
   return lines.map((line) => line.slice(indent)).join('\n');
 }

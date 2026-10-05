@@ -36,6 +36,19 @@ export const valid: readonly ValidTestCase<Options>[] = [
       'parse(a) {}',
     ),
   },
+  {
+    name: 'counts inject() inside a larger initializer as an inject field, like inject-at-top',
+    code: cls(
+      'private readonly env = inject(Config).environment;',
+      'private readonly changes = toSignal(inject(Store).select(selectCart));',
+      'private readonly api = (() => inject(ApiClient))();',
+      'readonly loading = signal(false);',
+    ),
+  },
+  {
+    name: 'leaves inject() inside a callback to its outer call, since it runs later',
+    code: cls('readonly loading = signal(false);', 'readonly user = computed(() => inject(Session).user());'),
+  },
 ];
 
 export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
@@ -89,9 +102,21 @@ export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
     errors: [{ messageId: 'outOfOrder' }],
   },
   {
-    name: 'leaves blank lines to statement-spacing after reordering',
+    name: 'leaves blank lines to the formatter after reordering',
     code: cls('save() {', '  return 1;', '}', 'private readonly http = inject(HttpClient);'),
     output: cls('private readonly http = inject(HttpClient);', 'save() {', '  return 1;', '}'),
+    errors: [{ messageId: 'outOfOrder' }],
+  },
+  {
+    name: 'moves inject(X).prop above signals',
+    code: cls('readonly loading = signal(false);', 'private readonly env = inject(Config).environment;'),
+    output: cls('private readonly env = inject(Config).environment;', 'readonly loading = signal(false);'),
+    errors: [{ messageId: 'outOfOrder' }],
+  },
+  {
+    name: 'moves a nested eager inject() above signals',
+    code: cls('readonly loading = signal(false);', 'readonly cart = toSignal(inject(Store).select(selectCart));'),
+    output: cls('readonly cart = toSignal(inject(Store).select(selectCart));', 'readonly loading = signal(false);'),
     errors: [{ messageId: 'outOfOrder' }],
   },
 ];

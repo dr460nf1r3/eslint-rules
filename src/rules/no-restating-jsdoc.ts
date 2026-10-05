@@ -110,12 +110,12 @@ export default createRule<Options, MessageIds>({
     }
 
     return {
-      FunctionDeclaration: (node) => check(node, node.id?.name),
-      MethodDefinition: (node) => check(node, keyName(node.key)),
-      PropertyDefinition: (node) => check(node, keyName(node.key)),
-      TSPropertySignature: (node) => check(node, keyName(node.key)),
-      TSMethodSignature: (node) => check(node, keyName(node.key)),
-      ClassDeclaration: (node) => check(node, node.id?.name),
+      'FunctionDeclaration': (node) => check(node, node.id?.name),
+      'MethodDefinition': (node) => check(node, keyName(node.key)),
+      'PropertyDefinition': (node) => check(node, keyName(node.key)),
+      'TSPropertySignature': (node) => check(node, keyName(node.key)),
+      'TSMethodSignature': (node) => check(node, keyName(node.key)),
+      'ClassDeclaration': (node) => check(node, node.id?.name),
       'Program > VariableDeclaration, ExportNamedDeclaration > VariableDeclaration': (
         node: TSESTree.VariableDeclaration,
       ) => check(node, keyName(node.declarations[0]?.id)),
@@ -149,7 +149,6 @@ function onlyKnownWords(text: string, known: ReadonlySet<string>, generic: Reado
   if (!text || WHY_WORDS.test(text)) return false;
 
   const words = proseWords(text);
-
   return words.length > 0 && words.every((word) => known.has(word) || generic.has(word));
 }
 
@@ -163,7 +162,6 @@ function jsDocBefore(sourceCode: SourceCode, node: TSESTree.Node): TSESTree.Comm
   );
   const firstToken = sourceCode.getFirstToken(start);
   const comment = firstToken ? sourceCode.getCommentsBefore(firstToken).at(-1) : undefined;
-
   return comment && isJsDoc(comment) ? comment : undefined;
 }
 
@@ -172,7 +170,6 @@ function parseJsDoc(comment: TSESTree.Comment): { description: string; tags: Tag
   const firstTag = lines.findIndex((line) => line.startsWith('@'));
   const descriptionLines = firstTag === -1 ? lines : lines.slice(0, firstTag);
   const tags = (firstTag === -1 ? [] : lines.slice(firstTag)).flatMap(parseTag);
-
   return { description: descriptionLines.join(' ').trim(), tags };
 }
 
@@ -181,7 +178,6 @@ function parseTag(line: string): Tag[] {
   if (param) return [{ kind: 'param', name: param[1]!.split('.').at(-1)!, text: param[2]!.trim() }];
 
   const returns = RETURNS_TAG.exec(line);
-
   return returns ? [{ kind: 'returns', text: returns[1]!.trim() }] : [];
 }
 

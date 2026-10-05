@@ -1,4 +1,4 @@
-import rule, { RULE_NAME } from '../../../src/rules/statement-spacing.js';
+import rule, { RULE_NAME } from '../../../src/rules/blank-lines.js';
 import { createRuleTester } from '../../test-utils.js';
 import { invalid, valid } from './cases.js';
 

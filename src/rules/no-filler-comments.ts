@@ -77,7 +77,6 @@ function classify(text: string): MessageIds | undefined {
   if (DIVIDER.test(text) || LABEL.test(text)) return 'divider';
 
   const unquoted = text.replace(/"[^"]*"|`[^`]*`/g, '');
-
   return FILLER.some((pattern) => pattern.test(unquoted)) ? 'filler' : undefined;
 }
 

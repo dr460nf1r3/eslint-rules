@@ -93,7 +93,6 @@ function isSchemaPipe(arg: TSESTree.CallExpressionArgument): boolean {
   if (arg.type !== 'NewExpression') return false;
 
   const calleeName = arg.callee.type === 'Identifier' ? arg.callee.name : '';
-
   return (
     calleeName.startsWith('Zod') ||
     arg.arguments.some((inner) => inner.type === 'Identifier' && SCHEMA_NAME.test(inner.name))

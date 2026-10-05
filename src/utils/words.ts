@@ -163,7 +163,6 @@ export function proseWords(text: string): string[] {
  */
 export function codeWords(tokens: readonly TSESTree.Token[]): Set<string> {
   const words = new Set<string>();
-
   for (const token of tokens) {
     for (const concept of TOKEN_CONCEPTS.get(token.value) ?? []) {
       words.add(concept);

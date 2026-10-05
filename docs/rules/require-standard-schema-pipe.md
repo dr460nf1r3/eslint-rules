@@ -13,7 +13,7 @@ Require the global StandardSchemaValidationPipe in Nest bootstraps
 
 ## Rationale
 
-A `@Body({ schema })` option does nothing unless the app registers `StandardSchemaValidationPipe` globally; without it, request validation is silently skipped. Every file that calls `NestFactory.create` must therefore also construct the pipe.
+A `@Body({ schema })` option does nothing unless the app registers `StandardSchemaValidationPipe` globally; without it, request validation is silently skipped. Every file that calls `NestFactory.create` must therefore construct the pipe, or pass a root module that provides it as `APP_PIPE` (directly or through modules it imports by relative path; path aliases are not followed).
 
 ## Options
 
@@ -32,6 +32,24 @@ File: `apps/api/src/main.ts`
 
 ```ts
 const app = await NestFactory.create(AppModule); app.useGlobalPipes(new ValidationPipe());
+```
+
+#### Reports when the root module provides no APP_PIPE
+
+File: `tests/rules/require-standard-schema-pipe/fixtures/no-pipe/main.ts`
+
+```ts
+import { AppModule } from './app.module';
+const app = await NestFactory.create(AppModule);
+```
+
+#### Reports when the root module cannot be resolved
+
+File: `tests/rules/require-standard-schema-pipe/fixtures/no-pipe/main.ts`
+
+```ts
+import { AppModule } from './missing.module';
+const app = await NestFactory.create(AppModule);
 ```
 
 </details>
@@ -53,6 +71,15 @@ File: `apps/shell/src/main.ts`
 
 ```ts
 bootstrapApplication(App);
+```
+
+#### Accepts an APP_PIPE provider in a module the root module imports
+
+File: `tests/rules/require-standard-schema-pipe/fixtures/app-pipe/main.ts`
+
+```ts
+import { AppModule } from './app.module';
+const app = await NestFactory.create(AppModule);
 ```
 
 </details>

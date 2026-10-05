@@ -2,10 +2,16 @@
   "printWidth": 120,
   "singleQuote": true,
   "trailingComma": "all",
+  "arrowParens": "always",
+  "quoteProps": "consistent",
   "overrides": [
     {
-      "files": ["docs/rules/*.md"],
-      "options": { "embeddedLanguageFormatting": "off" }
+      "files": [
+        "docs/rules/*.md"
+      ],
+      "options": {
+        "embeddedLanguageFormatting": "off"
+      }
     }
   ]
 }

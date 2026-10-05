@@ -52,7 +52,7 @@ export default createRule<Options, MessageIds>({
 
   create(context) {
     return {
-      Program() {
+      'Program'() {
         for (const comment of context.sourceCode.getAllComments()) {
           if (!ARTIFACT_PATTERNS.some((pattern) => pattern.test(comment.value))) continue;
 

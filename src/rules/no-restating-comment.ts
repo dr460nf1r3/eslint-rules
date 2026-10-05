@@ -70,7 +70,6 @@ function adjacentCodeTokens(sourceCode: SourceCode, unit: readonly TSESTree.Comm
 
   const previous = sourceCode.getTokenBefore(last);
   const isTrailing = last.type === 'Line' && previous?.loc.end.line === last.loc.start.line;
-
   return isTrailing ? tokensOnLine(sourceCode, last.loc.start.line) : [];
 }
 

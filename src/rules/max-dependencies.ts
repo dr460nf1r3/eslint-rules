@@ -60,6 +60,7 @@ export default createRule<Options, MessageIds>({
         data: { name: node.id?.name ?? 'class', count, max },
       });
     }
+
     return { ClassDeclaration: check, ClassExpression: check };
   },
 });

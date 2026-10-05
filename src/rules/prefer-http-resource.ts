@@ -41,7 +41,6 @@ export default createRule<Options, MessageIds>({
     const imports = createImportTracker();
     const http = createHttpClientMembers(imports);
     const getCalls: TSESTree.MemberExpression[] = [];
-
     return {
       ...imports.visitor,
       ...http.visitor,

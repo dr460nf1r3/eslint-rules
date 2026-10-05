@@ -53,6 +53,7 @@ export default createRule<Options, MessageIds>({
         data: { name: functionName(node), count: counted.length, max, params: counted.map(paramName).join(', ') },
       });
     }
+
     return { FunctionDeclaration: check, FunctionExpression: check, ArrowFunctionExpression: check };
   },
 });

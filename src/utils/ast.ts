@@ -22,7 +22,6 @@ export const DI_DECORATORS: ReadonlySet<string> = new Set([
 export function decoratorName(decorator: TSESTree.Decorator): string | undefined {
   const expression = decorator.expression;
   const callee = expression.type === 'CallExpression' ? expression.callee : expression;
-
   return callee.type === 'Identifier' ? callee.name : undefined;
 }
 

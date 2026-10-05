@@ -65,7 +65,6 @@ export default createRule<Options, MessageIds>({
     const imports = createImportTracker();
     const http = createHttpClientMembers(imports);
     const subscribeCalls: TSESTree.MemberExpression[] = [];
-
     return {
       ...imports.visitor,
       ...http.visitor,
@@ -120,7 +119,6 @@ function isSetupMember(member: ClassMember): boolean {
   if (member.type === 'MethodDefinition') return SETUP_MEMBERS.has(memberName(member));
 
   const value = 'value' in member ? member.value : undefined;
-
   return value?.type !== 'ArrowFunctionExpression' && value?.type !== 'FunctionExpression';
 }
 

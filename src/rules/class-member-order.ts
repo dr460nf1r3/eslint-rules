@@ -85,7 +85,6 @@ function compareRanks(a: RankedMember, b: RankedMember): number {
 function isSafeOrder(sorted: readonly ClassMember[]): boolean {
   const fields = sorted.filter(isField);
   const position = new Map(fields.map((member, index) => [memberName(member), index]));
-
   return fields.every((field, index) =>
     eagerThisReads(field.value).every((name) => (position.get(name) ?? -1) < index),
   );
@@ -131,7 +130,6 @@ function reorder(
   const last = chunks.get(members.at(-1)!)!;
   const indent = ' '.repeat(sourceCode.getLocFromIndex(first[0]).column);
   const text = sorted.map((member) => sourceCode.text.slice(...chunks.get(member)!)).join(`\n${indent}`);
-
   return fixer.replaceTextRange([first[0], last[1]], text);
 }
 
@@ -145,7 +143,6 @@ function chunkRange(sourceCode: SourceCode, member: ClassMember): TSESTree.Range
   const trailing = sourceCode
     .getCommentsAfter(lastToken)
     .filter((comment) => comment.loc.start.line === lastToken.loc.end.line);
-
   return [(leading[0] ?? firstToken).range[0], (trailing.at(-1) ?? lastToken).range[1]];
 }
 

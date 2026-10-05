@@ -102,7 +102,6 @@ export default createRule<Options, MessageIds>({
     const services = context.sourceCode.parserServices as Partial<TemplateParserServices> | undefined;
     const locOf = (node: TemplateText | TemplateTextAttribute): TSESTree.SourceLocation | undefined =>
       services?.convertNodeSourceSpanToLoc?.(node.keySpan ?? node.sourceSpan);
-
     return {
       Text(node: TSESTree.Node) {
         const template = node as unknown as TemplateText;

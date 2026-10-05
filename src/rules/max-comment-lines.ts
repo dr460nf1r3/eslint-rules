@@ -70,7 +70,6 @@ export default createRule<Options, MessageIds>({
   create(context, [options]) {
     const limits = { ...DEFAULTS, ...options };
     const sourceCode = context.sourceCode;
-
     return {
       Program() {
         for (const unit of commentUnits(sourceCode)) {
@@ -94,12 +93,10 @@ function measure(sourceCode: SourceCode, unit: readonly TSESTree.Comment[]): { m
   if (isJsDoc(first)) {
     const lines = commentLines(first);
     const firstTag = lines.findIndex((line) => line.startsWith('@'));
-
     return { messageId: 'docDescription', count: firstTag === -1 ? lines.length : firstTag };
   }
 
   const count = unit.at(-1)!.loc.end.line - first.loc.start.line + 1;
-
   return { messageId: isInsideFunction(sourceCode, first) ? 'bodyComment' : 'otherComment', count };
 }
 

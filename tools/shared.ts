@@ -27,7 +27,6 @@ export function ruleEntries(): RuleEntry[] {
     .map(([name, rule]) => {
       const docs = rule.meta.docs as RuleDocs & { description: string };
       const lightest = PRESETS.indexOf(docs.preset ?? 'full');
-
       return {
         name,
         description: docs.description,

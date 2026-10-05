@@ -40,10 +40,9 @@ export default createRule<Options, MessageIds>({
   create(context) {
     const imports = createImportTracker();
     const angularInjectables: TSESTree.Decorator[] = [];
-
     return {
       ...imports.visitor,
-      Decorator(node) {
+      'Decorator'(node) {
         const entry = imports.sourceOf(decoratorName(node) ?? '');
         if (entry?.source === ANGULAR_CORE && entry.importedName === 'Injectable') {
           angularInjectables.push(node);
@@ -56,7 +55,6 @@ export default createRule<Options, MessageIds>({
           (statement): statement is TSESTree.ImportDeclaration =>
             statement.type === 'ImportDeclaration' && statement.source.value === ANGULAR_CORE,
         );
-
         for (const decorator of convertible) {
           context.report({
             node: decorator,
@@ -84,7 +82,6 @@ function isRootInjectable(decorator: TSESTree.Decorator): boolean {
   if (args.length !== 1 || options?.type !== 'ObjectExpression' || options.properties.length !== 1) return false;
 
   const [property] = options.properties;
-
   return (
     property?.type === 'Property' &&
     property.key.type === 'Identifier' &&
@@ -118,7 +115,6 @@ function rewriteImport(
 
     return hasService ? [] : ['Service'];
   });
-
   if (keepInjectable && !hasService) {
     rewritten.push('Service');
   }

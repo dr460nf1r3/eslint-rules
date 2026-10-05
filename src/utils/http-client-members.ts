@@ -6,7 +6,7 @@ export const ANGULAR_HTTP = '@angular/common/http';
 export interface HttpClientMembers {
   visitor: {
     'PropertyDefinition > CallExpression.value[callee.name="inject"]'(node: TSESTree.CallExpression): void;
-    TSParameterProperty(node: TSESTree.TSParameterProperty): void;
+    'TSParameterProperty'(node: TSESTree.TSParameterProperty): void;
   };
   members: ReadonlySet<string>;
 }
@@ -36,7 +36,7 @@ export function createHttpClientMembers(imports: ImportTracker): HttpClientMembe
           members.add(key);
         }
       },
-      TSParameterProperty(node) {
+      'TSParameterProperty'(node) {
         const parameter = node.parameter;
         if (parameter.type !== 'Identifier') return;
 
@@ -71,6 +71,5 @@ export function thisMemberCall(node: TSESTree.Node): { member: string; verb: str
 
   const member = memberKeyName(node.object.property);
   const verb = memberKeyName(node.property);
-
   return member !== undefined && verb !== undefined ? { member, verb } : undefined;
 }

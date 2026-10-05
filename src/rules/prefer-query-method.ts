@@ -52,11 +52,10 @@ export default createRule<Options, MessageIds>({
     const isFrom = importChecker(imports);
     const isNestQuery = (decorator: TSESTree.Decorator): boolean => isFrom(decoratorName(decorator), NEST, 'Query');
     const reportRequest = (node: TSESTree.Node): void => context.report({ node, messageId: 'useQueryBody' });
-
     return {
       ...imports.visitor,
       ...http.visitor,
-      Decorator(node) {
+      'Decorator'(node) {
         const name = decoratorName(node);
         if (name !== 'Get' || !isFrom(name, NEST, 'Get') || node.parent.type !== 'MethodDefinition') return;
 
@@ -66,7 +65,7 @@ export default createRule<Options, MessageIds>({
           context.report({ node, messageId: 'useQueryMethod', data: { method } });
         }
       },
-      CallExpression(node) {
+      'CallExpression'(node) {
         if (isHttpResourceCall(node, (name) => isFrom(name, ANGULAR_HTTP, 'httpResource'))) {
           returnedRequests(node.arguments[0]).filter(sendsQueryString).forEach(reportRequest);
         }
@@ -107,7 +106,6 @@ function hasDecorator(param: TSESTree.Parameter, predicate: (decorator: TSESTree
 function isHttpResourceCall(node: TSESTree.CallExpression, isHttpResource: (name: string) => boolean): boolean {
   const callee = node.callee;
   const target = callee.type === 'MemberExpression' ? callee.object : callee;
-
   return target.type === 'Identifier' && isHttpResource(target.name);
 }
 
@@ -138,7 +136,6 @@ function propertyValue(node: TSESTree.Node | undefined, name: string): TSESTree.
   const property = node.properties.find(
     (candidate) => candidate.type === 'Property' && candidate.key.type === 'Identifier' && candidate.key.name === name,
   );
-
   return property?.type === 'Property' ? property.value : undefined;
 }
 

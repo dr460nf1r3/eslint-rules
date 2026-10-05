@@ -85,7 +85,7 @@ class A {
 }
 ```
 
-#### Leaves blank lines to statement-spacing after reordering
+#### Leaves blank lines to the formatter after reordering
 
 ```ts
 class A {
@@ -93,6 +93,24 @@ class A {
     return 1;
   }
   private readonly http = inject(HttpClient);
+}
+```
+
+#### Moves inject(X).prop above signals
+
+```ts
+class A {
+  readonly loading = signal(false);
+  private readonly env = inject(Config).environment;
+}
+```
+
+#### Moves a nested eager inject() above signals
+
+```ts
+class A {
+  readonly loading = signal(false);
+  readonly cart = toSignal(inject(Store).select(selectCart));
 }
 ```
 
@@ -133,6 +151,26 @@ class A {
   parse(a: string): void;
   parse(a: number): void;
   parse(a) {}
+}
+```
+
+#### Counts inject() inside a larger initializer as an inject field, like inject-at-top
+
+```ts
+class A {
+  private readonly env = inject(Config).environment;
+  private readonly changes = toSignal(inject(Store).select(selectCart));
+  private readonly api = (() => inject(ApiClient))();
+  readonly loading = signal(false);
+}
+```
+
+#### Leaves inject() inside a callback to its outer call, since it runs later
+
+```ts
+class A {
+  readonly loading = signal(false);
+  readonly user = computed(() => inject(Session).user());
 }
 ```
 

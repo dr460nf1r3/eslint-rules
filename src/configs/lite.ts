@@ -9,6 +9,7 @@ import { buildPreset } from './build.js';
 
 export default (plugin: ESLint.Plugin): Linter.Config[] =>
   buildPreset(plugin, 'lite', {
+    'blank-lines': 'warn',
     'class-member-order': 'warn',
     'comment-style': 'warn',
     'decorator-order': 'warn',
@@ -16,5 +17,4 @@ export default (plugin: ESLint.Plugin): Linter.Config[] =>
     'no-llm-artifacts': 'warn',
     'no-stray-semicolon': 'warn',
     'one-line-guard': 'warn',
-    'statement-spacing': 'warn',
   });

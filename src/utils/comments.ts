@@ -30,7 +30,6 @@ export function isJsDoc(comment: TSESTree.Comment): boolean {
 export function standsAlone(sourceCode: SourceCode, comment: TSESTree.Comment): boolean {
   const before = sourceCode.lines[comment.loc.start.line - 1]!.slice(0, comment.loc.start.column);
   const after = sourceCode.lines[comment.loc.end.line - 1]!.slice(comment.loc.end.column);
-
   return before.trim() === '' && after.trim() === '';
 }
 
@@ -42,7 +41,6 @@ export function standsAlone(sourceCode: SourceCode, comment: TSESTree.Comment): 
 export function lineCommentRuns(sourceCode: SourceCode): TSESTree.Comment[][] {
   const runs: TSESTree.Comment[][] = [];
   let current: TSESTree.Comment[] = [];
-
   for (const comment of sourceCode.getAllComments()) {
     const joins = isRunCandidate(sourceCode, comment) && continuesRun(current, comment);
     if (!joins) {
@@ -103,7 +101,6 @@ export function looksLikeCode(text: string): boolean {
   if (trimmed === '' || PROSE_MARKER.test(trimmed)) return false;
 
   let program: TSESTree.Program;
-
   try {
     program = parse(trimmed, { ecmaVersion: 'latest', sourceType: 'module' });
   } catch {
@@ -126,7 +123,6 @@ export function commentUnits(sourceCode: SourceCode): TSESTree.Comment[][] {
     .getAllComments()
     .filter((comment) => !inRun.has(comment) && !isDirective(comment))
     .map((comment) => [comment]);
-
   return [...runs, ...singles];
 }
 

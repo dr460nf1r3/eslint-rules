@@ -1,3 +1,4 @@
+import blankLines from './blank-lines.js';
 import classMemberOrder from './class-member-order.js';
 import commentStyle from './comment-style.js';
 import decoratorOrder from './decorator-order.js';
@@ -22,9 +23,9 @@ import preferQueryMethod from './prefer-query-method.js';
 import preferServiceDecorator from './prefer-service-decorator.js';
 import requireBodySchema from './require-body-schema.js';
 import requireStandardSchemaPipe from './require-standard-schema-pipe.js';
-import statementSpacing from './statement-spacing.js';
 
 export const rules = {
+  'blank-lines': blankLines,
   'class-member-order': classMemberOrder,
   'comment-style': commentStyle,
   'decorator-order': decoratorOrder,
@@ -49,5 +50,4 @@ export const rules = {
   'prefer-service-decorator': preferServiceDecorator,
   'require-body-schema': requireBodySchema,
   'require-standard-schema-pipe': requireStandardSchemaPipe,
-  'statement-spacing': statementSpacing,
 };

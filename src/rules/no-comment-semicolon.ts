@@ -46,7 +46,6 @@ export default createRule<Options, MessageIds>({
           if (isDirective(comment) || (comment.type === 'Line' && looksLikeCode(comment.value))) continue;
 
           const valueStart = comment.range[0] + 2;
-
           for (const index of proseSemicolons(comment.value)) {
             const start = sourceCode.getLocFromIndex(valueStart + index);
             context.report({
